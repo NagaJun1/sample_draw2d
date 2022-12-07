@@ -1,51 +1,65 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
     <!-- cdn読み込み -->
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/draw2d@1.0.38/dist/draw2d.js"></script>
+    <script src="./js/draw2d/sample_json.js"></script>
+    <script src="./js/draw2d/ConnectionForTableShape.js"></script>
+    <script src="./js/draw2d/TableShape.js"></script>
+    <script src="./js/draw2d/lib.js"></script>
     <script type="text/javascript">
-        let canvas = null;
-        document.addEventListener("DOMContentLoaded", function () {
-            canvas = new draw2d.Canvas("canvas_id");
 
-            //ドラッグ&ドロップで connectionを作成できるようにする
-            canvas.installEditPolicy(new draw2d.policy.connection.DragConnectionCreatePolicy({
-                createConnection: function () {
-                    return new draw2d.Connection({
-                        //connectionの形状の設定
-                        router: new draw2d.layout.connection.InteractiveManhattanConnectionRouter()
-                    })
-                }
-            }));
+        // ドキュメントロード時
+        document.addEventListener("DOMContentLoaded", function () {
+
+            console.log("DOMContentLoaded start");
+
+            // キャンバスを初期化
+            initialize_canvas();
+
+            $('canvas_redo').on('click', function () {
+                canvas.getCommandStack().redo();
+            });
+
+            $('#canvas_undo').on('click', function () {
+                canvas.getCommandStack().undo();
+            });
+
+            $('#figure_delete').on('click', function () {
+                canvas.getCommandStack().execute(
+                    new draw2d.command.CommandDelete(canvas.getPrimarySelection()));
+            });
+
+            // ラベル作成
+            $('#label_add').on('click', add_label);
+
+            // JSON 出力
+            $('#export_json').on('click', export_json);
+
+            // TableShape 作成
+            $('#add_table_shape').on('click', add_table_shape);
+
+            // JSON 読み取り
+            import_json();
+
+            console.log("DOMContentLoaded end");
         });
-        function canvas_redo() {
-            canvas.getCommandStack().redo();
-        }
-        function canvas_undo() {
-            canvas.getCommandStack().undo();
-        }
-        function figure_delete() {
-            canvas.getCommandStack().execute(
-                new draw2d.command.CommandDelete(canvas.getPrimarySelection()));
-        }
-        function label_add() {
-            let label = new draw2d.shape.basic.Label({ text: "テキスト" });
-            label.createPort("input");
-            label.createPort("output");
-            canvas.getCommandStack().execute(new draw2d.command.CommandAdd(canvas, label, 10, 10));
-        }
     </script>
 </head>
 
 <body id="container">
     <div style="margin: 5px;">
-        <input type="button" value="undo" onclick="canvas_undo()">
-        <input type="button" value="redo" onclick="canvas_redo()">
-        <input type="button" value="delete" onclick="figure_delete()">
-        <input type="button" value="label_add" onclick="label_add()">
+        <input type="button" value="export json" id="export_json">
+        <input type="button" value="add TableShape" id="add_table_shape">
+        <input type="button" value="undo" id="canvas_undo">
+        <input type="button" value="redo" id="canvas_redo">
+        <input type="button" value="delete" id="figure_delete">
+        <input type="button" value="label_add" id="label_add">
     </div>
     <div id="canvas_id" style="width:3000px; height:3000px;background-color: rgb(220, 220, 220);"></div>
 </body>
