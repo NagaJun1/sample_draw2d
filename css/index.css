@@ -1,0 +1,22 @@
+#btn-container {
+  margin: 10px;
+}
+
+#btn-container button {
+  padding: 10px;
+  min-height: 80px;
+  min-width: 90px;
+  font-size: 2rem;
+  margin: 5px;
+}
+
+a {
+  margin: 10px;
+}
+
+#main-canvas {
+  position: relative;
+  background-color: rgb(223, 249, 255);
+  width: 100%;
+  height: 1000px;
+}
