@@ -51,6 +51,6 @@ let clickAddLabel = function () {
   label.createPort("output"); // output ポートの追加
   label.setFontSize(40);
 
-  let addCommand = new draw2d.command.CommandAdd(canvas, label, 100, 100);
+  let addCommand = new draw2d.command.CommandAdd(canvas, label, 80, 80);
   canvas.getCommandStack().execute(addCommand);
 };
